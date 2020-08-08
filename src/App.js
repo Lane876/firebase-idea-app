@@ -14,6 +14,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { useStyles } from "./styles";
 import NewIdea from "./components/NewIdea";
 
+
 function App() {
   const initialState = {
     title: "",
