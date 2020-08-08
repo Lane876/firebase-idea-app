@@ -54,7 +54,7 @@ export const useStyles = makeStyles((theme) => ({
     outlineColor: "blue",
   },
   modal:{
-    width: "500px",
+    maxWidth: "500px",
     outlineColor:"blue",
     display: "flex",
     justifyContent: "center",
