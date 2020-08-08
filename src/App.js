@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { useStyles } from "./styles";
 
 function App() {
   const initialState = {
@@ -37,6 +38,8 @@ function App() {
     "Other",
   ]);
   const [category, setCategory] = useState([])
+  const [update, setUpdate] = useState(false)
+  const classes = useStyles()
 
   const newtime = new Date().toLocaleString();
   // const time = firebase.database.ServerValue.TIMESTAMP
@@ -124,65 +127,58 @@ function App() {
 
   function handleEditCategory() {
     setOpen(true);
+    setCategory('')
   }
 
   function handleAddCategory() {
-    options.push(category)
-    setOpen(false)
+      options.push(category)
+      setOpen(false)
+      setUpdate(false)
+
   }
-
-
 
   function handleRemoveCategory(string){
     options.splice(string, 1)
     setOpen(false)
+    setUpdate(false)
+
   }
 
   function handleCategoryInput(e){
     setCategory(e.target.value)
+  }
+  
+  function handleEditOneCategory(index){
+    setUpdate(true)
+    setCategory(options[index])
+    options.splice(index, 1)
   }
 
   return (
     <div className="App">
       <Typography
         variant="h2"
-        style={{ color: "#ffff", fontWeight: "700", padding: "1rem" }}
+        className={classes.title}
       >
         IDEA SAVER
       </Typography>
       <Paper
-        style={{
-          width: "400px",
-          padding: "1rem",
-          margin: "0 auto",
-        }}
+        className={classes.formPaper}
       >
         <form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "400px",
-            height: "auto",
-            margin: "0 auto",
-          }}
+          className={classes.form}
           onSubmit={handleSubmit}
         >
-          <label style={{ textAlign: "left", fontStyle: "italic" }}>
+          <label className={classes.formLabel}>
             Title
           </label>
           <input
             value={values.title}
             name="title"
             onChange={handleInput}
-            style={{
-              marginBottom: ".3rem",
-              padding: "1rem",
-              borderRadius: "5px",
-              border: "1px solid lightblue",
-              outlineColor: "blue",
-            }}
+            className={classes.titleInput}
           />
-          <label style={{ textAlign: "left", fontStyle: "italic" }}>
+          <label className={classes.formLabel}>
             Description
           </label>
           <TextareaAutosize
@@ -190,24 +186,11 @@ function App() {
             name="longTitle"
             value={values.longTitle}
             onChange={handleInput}
-            style={{
-              marginBottom: ".3rem",
-              padding: "1rem",
-              borderRadius: "5px",
-              border: "1px solid lightblue",
-              outlineColor: "blue",
-            }}
+            className={classes.descriptionInput}
           />
 
           <Typography
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              fontStyle: "italic",
-              fontSize: "15px",
-              marginTop: "1rem",
-              color:"black"
-            }}
+            className={classes.ratingInput}
           >
             Rating
           </Typography>
@@ -222,20 +205,14 @@ function App() {
             onChange={handleSlider}
             value={rating}
           />
-          <label style={{ textAlign: "left", fontStyle: "italic" }}>
+          <label className={classes.formLabel}>
             Category
           </label>
           <select
             value={values.category}
             name="category"
             onChange={handleInput}
-            style={{
-              marginBottom: ".3rem",
-              padding: "1rem",
-              borderRadius: "5px",
-              border: "1px solid lightblue",
-              outlineColor: "blue",
-            }}
+            className={classes.categoryInput}
           >
             {options.map((option, index) => (
               <option key={index}>{option}</option>
@@ -244,48 +221,34 @@ function App() {
 
           <Modal open={open} onClose={(e) => setOpen(false)}>
             <Paper
-              style={{
-                width: "500px",
-                outlineColor:"blue",
-                display: "flex",
-                justifyContent: "center",
-                margin: "3rem auto",
-                flexDirection:"column",
-                padding:"1rem"
-              }}
+              className={classes.modal}
             >
               {options.map((option, index)=>(
-                <div style={{display:"flex", justifyContent:"space-between"}}>
-                  <Typography key={index}>{option}</Typography>
+                <div style={{display:"flex", justifyContent:"space-between"}}  key={index}>
+                  <Typography>{option}</Typography>
+                  <div>
+                <Button onClick={()=>handleEditOneCategory(index)}><EditIcon color='primary'/></Button>
                 <Button onClick={()=>handleRemoveCategory(index)}><DeleteIcon color='secondary'/></Button>
+
+                  </div>
 
                 </div>
               ))}
-              <input placeholder='add category' onChange={handleCategoryInput} style={{marginBottom: ".3rem",
-              padding: "1rem",
-              borderRadius: "5px",
-              border: "1px solid lightblue",
-              outlineColor: "blue"}} />
-              <Button variant="contained" color="primary" onClick={handleAddCategory}>add category</Button>
+              <input placeholder='add category' value={category} onChange={handleCategoryInput} className={classes.modalInput} />
+              <Button variant="contained" color="primary" onClick={handleAddCategory}>{update ? "Update category" : "add category"}</Button>
             </Paper>
           </Modal>
 
           <Button onClick={handleEditCategory}>edit categories</Button>
 
-          <label style={{ textAlign: "left", fontStyle: "italic" }}>
+          <label className={classes.formLabel}>
             Expectation
           </label>
           <input
             name="expectation"
             value={values.expectation}
             onChange={handleInput}
-            style={{
-              marginBottom: ".3rem",
-              padding: "1rem",
-              borderRadius: "5px",
-              border: "1px solid lightblue",
-              outlineColor: "blue",
-            }}
+            className={classes.expectationInput}
           />
           <Button type="submit" variant="contained" color="primary">
             {ideaId === "" ? "SAVE" : "Update"}
@@ -312,7 +275,11 @@ function App() {
                 Category: {ideaObj[id].category}
               </Typography>
               <Divider />
-              <Typography style={{ display: "flex", fontStyle: "italic",wordWrap: "break-word" }}>
+              <Typography style={{ display: "flex", wordWrap: "break-word" }}>
+                Expectation: {ideaObj[id].expectation}
+              </Typography>
+              <Divider />
+              <Typography style={{ display: "flex",wordWrap: "break-word" }}>
                 Created at: {ideaObj[id].timestamp}
               </Typography>
               <Divider />
