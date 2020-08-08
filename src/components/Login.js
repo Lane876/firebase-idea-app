@@ -14,11 +14,11 @@ const Login = ({ setCurrentUser, currentUser }) => {
       if (user) setCurrentUser(user.displayName);
     });
   }, []);
-  const authWithGoogle = () => {
-    firebase.auth().signInWithPopup(provider);
+  const authWithGoogle = async () => {
+   await firebase.auth().signInWithPopup(provider);
   };
-  const logOut = () => {
-    firebase.auth().signOut();
+  const logOut = async () => {
+   await firebase.auth().signOut();
     window.location.reload();
   };
   return (
