@@ -5,10 +5,10 @@ export const useStyles = makeStyles((theme) => ({
     color: "#07d38a",
     fontWeight: "700",
     padding: "1rem",
-    letterSpacing: "10px",
+    letterSpacing: "8px",
   },
   formPaper: {
-    maxWidth: "400px",
+    maxWidth: "450px",
     padding: "1rem",
     margin: "0 auto",
   },
@@ -16,7 +16,6 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    height: "auto",
     margin: "0 auto",
   },
   formLabel: {
@@ -29,7 +28,6 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     border: "1px solid lightblue",
     outlineColor: "blue",
-    // width: "100%"
   },
   descriptionInput: {
     marginBottom: ".3rem",

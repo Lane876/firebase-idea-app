@@ -15,8 +15,6 @@ import { useStyles } from "./styles";
 import NewIdea from "./components/NewIdea";
 import Login from "./components/Login";
 
-
-
 function App() {
   const initialState = {
     title: "",
@@ -26,7 +24,7 @@ function App() {
     category: "",
     expectation: "",
   };
-  const [currentUser, setCurrentUser] = useState()
+  const [currentUser, setCurrentUser] = useState();
   const [values, setValues] = useState(initialState);
   const [ideaObj, setIdeasObj] = useState({});
   const [ideaId, setIdeaId] = useState("");
@@ -101,13 +99,16 @@ function App() {
         }
       );
     } else {
-      db.child(`${currentUser}/${ideaId}`).set({ ...obj, rating: rating }, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          setIdeaId("");
+      db.child(`${currentUser}/${ideaId}`).set(
+        { ...obj, rating: rating },
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            setIdeaId("");
+          }
         }
-      });
+      );
     }
   };
 
@@ -156,111 +157,108 @@ function App() {
 
   return (
     <>
+      <div className="App">
+        <Typography variant="h2" className={classes.title}>
+          IDEA SAVER
+        </Typography>
+        <Login setCurrentUser={setCurrentUser} currentUser={currentUser} />
+        <Paper className={classes.formPaper}>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <label className={classes.formLabel}>Title</label>
+            <input
+              value={values.title}
+              name="title"
+              onChange={handleInput}
+              className={classes.titleInput}
+            />
+            <label className={classes.formLabel}>Description</label>
+            <TextareaAutosize
+              rowsMax={10}
+              name="longTitle"
+              value={values.longTitle}
+              onChange={handleInput}
+              className={classes.descriptionInput}
+            />
 
-    <div className="App">
-      <Typography variant="h2" className={classes.title}>
-        IDEA SAVER
-      </Typography>
-    <Login setCurrentUser={setCurrentUser} currentUser={currentUser}/>
-      <Paper className={classes.formPaper}>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <label className={classes.formLabel}>Title</label>
-          <input
-            value={values.title}
-            name="title"
-            onChange={handleInput}
-            className={classes.titleInput}
-          />
-          <label className={classes.formLabel}>Description</label>
-          <TextareaAutosize
-            rowsMax={10}
-            name="longTitle"
-            value={values.longTitle}
-            onChange={handleInput}
-            className={classes.descriptionInput}
-          />
-
-          <Typography className={classes.ratingInput}>Rating</Typography>
-          <Slider
-            defaultValue={rating}
-            step={1}
-            marks
-            min={1}
-            max={10}
-            valueLabelDisplay="auto"
-            name="rating"
-            onChange={handleSlider}
-            value={rating}
-          />
-          <label className={classes.formLabel}>Category</label>
-          <select
-            value={values.category}
-            name="category"
-            onChange={handleInput}
-            className={classes.categoryInput}
-          >
-            {options.map((option, index) => (
-              <option key={index}>{option}</option>
-            ))}
-          </select>
-
-          <Modal open={open} onClose={(e) => setOpen(false)}>
-            <Paper className={classes.modal}>
+            <Typography className={classes.ratingInput}>Rating</Typography>
+            <Slider
+              defaultValue={rating}
+              step={1}
+              marks
+              min={1}
+              max={10}
+              valueLabelDisplay="auto"
+              name="rating"
+              onChange={handleSlider}
+              value={rating}
+            />
+            <label className={classes.formLabel}>Category</label>
+            <select
+              value={values.category}
+              name="category"
+              onChange={handleInput}
+              className={classes.categoryInput}
+            >
               {options.map((option, index) => (
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                  key={index}
-                >
-                  <Typography>{option}</Typography>
-                  <div>
-                    <Button onClick={() => handleEditOneCategory(index)}>
-                      <EditIcon color="primary" />
-                    </Button>
-                    <Button onClick={() => handleRemoveCategory(index)}>
-                      <DeleteIcon color="secondary" />
-                    </Button>
-                  </div>
-                </div>
+                <option key={index}>{option}</option>
               ))}
-              <input
-                placeholder="add category"
-                value={category}
-                onChange={handleCategoryInput}
-                className={classes.modalInput}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleAddCategory}
-              >
-                {update ? "Update category" : "add category"}
-              </Button>
-            </Paper>
-          </Modal>
+            </select>
 
-          <Button onClick={handleEditCategory}>edit categories</Button>
+            <Modal open={open} onClose={(e) => setOpen(false)}>
+              <Paper className={classes.modal}>
+                {options.map((option, index) => (
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                    key={index}
+                  >
+                    <Typography>{option}</Typography>
+                    <div>
+                      <Button onClick={() => handleEditOneCategory(index)}>
+                        <EditIcon color="primary" />
+                      </Button>
+                      <Button onClick={() => handleRemoveCategory(index)}>
+                        <DeleteIcon color="secondary" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <input
+                  placeholder="add category"
+                  value={category}
+                  onChange={handleCategoryInput}
+                  className={classes.modalInput}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddCategory}
+                >
+                  {update ? "Update category" : "add category"}
+                </Button>
+              </Paper>
+            </Modal>
 
-          <label className={classes.formLabel}>Expectation</label>
-          <input
-            name="expectation"
-            value={values.expectation}
-            onChange={handleInput}
-            className={classes.expectationInput}
-          />
-          <Button type="submit" variant="contained" color="primary">
-            {ideaId === "" ? "SAVE" : "Update"}
-          </Button>
-        </form>
-      </Paper>
-      <NewIdea
-        ideaObj={ideaObj}
-        setIdeaId={setIdeaId}
-        handleDelete={handleDelete}
-      />
-      
-    </div>
+            <Button onClick={handleEditCategory}>edit categories</Button>
 
-  </>
+            <label className={classes.formLabel}>Expectation</label>
+            <input
+              name="expectation"
+              value={values.expectation}
+              onChange={handleInput}
+              className={classes.expectationInput}
+            />
+            <Button type="submit" variant="contained" color="primary">
+              {ideaId === "" ? "SAVE" : "Update"}
+            </Button>
+          </form>
+        </Paper>
+        <NewIdea
+          ideaObj={ideaObj}
+          setIdeaId={setIdeaId}
+          handleDelete={handleDelete}
+        />
+      </div>
+    </>
   );
 }
 

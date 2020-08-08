@@ -24,7 +24,7 @@ const Login = ({ setCurrentUser, currentUser }) => {
   return (
     <div
       style={{
-        width: "400px",
+        maxWidth: "400px",
         display: "flex",
         flexDirection: "column",
         margin: "1rem auto",
