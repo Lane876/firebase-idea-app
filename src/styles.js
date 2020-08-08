@@ -8,14 +8,14 @@ export const useStyles = makeStyles((theme) => ({
     letterSpacing: "10px",
   },
   formPaper: {
-    width: "400px",
+    maxWidth: "400px",
     padding: "1rem",
     margin: "0 auto",
   },
   form: {
     display: "flex",
     flexDirection: "column",
-    width: "400px",
+    width: "100%",
     height: "auto",
     margin: "0 auto",
   },
@@ -29,6 +29,7 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     border: "1px solid lightblue",
     outlineColor: "blue",
+    // width: "100%"
   },
   descriptionInput: {
     marginBottom: ".3rem",
