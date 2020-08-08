@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyCWiy2YgHRlTeFZAlQ2NIxvP-__eXJwwXI",
   authDomain: "ideasaver-dcaf3.firebaseapp.com",
   databaseURL: "https://ideasaver-dcaf3.firebaseio.com",
@@ -11,6 +11,6 @@ const firebaseConfig = {
   measurementId: "G-10X8D5SYXF",
 };
 
-const db = firebase.initializeApp(firebaseConfig);
+export const db = firebase.initializeApp(firebaseConfig);
 
-export default db.database().ref()
+export default db.database().ref();

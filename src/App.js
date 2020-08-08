@@ -13,6 +13,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useStyles } from "./styles";
 import NewIdea from "./components/NewIdea";
+import Login from "./components/Login";
+
 
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
     category: "",
     expectation: "",
   };
-
+  const [currentUser, setCurrentUser] = useState()
   const [values, setValues] = useState(initialState);
   const [ideaObj, setIdeasObj] = useState({});
   const [ideaId, setIdeaId] = useState("");
@@ -38,15 +40,14 @@ function App() {
     "Education",
     "Other",
   ]);
-  const [category, setCategory] = useState([])
-  const [update, setUpdate] = useState(false)
-  const classes = useStyles()
+  const [category, setCategory] = useState([]);
+  const [update, setUpdate] = useState(false);
+  const classes = useStyles();
 
   const newtime = new Date().toLocaleString();
-  // const time = firebase.database.ServerValue.TIMESTAMP
 
   useEffect(() => {
-    db.child("ideas").on("value", (snapshot) => {
+    db.child(`${currentUser}`).on("value", (snapshot) => {
       if (snapshot.val() != null) {
         setIdeasObj({
           ...snapshot.val(),
@@ -55,7 +56,7 @@ function App() {
         setIdeasObj({});
       }
     });
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (ideaId === "") {
@@ -85,7 +86,7 @@ function App() {
 
   const editOrDelete = (obj) => {
     if (ideaId === "") {
-      db.child("ideas").push(
+      db.child(`${currentUser}`).push(
         {
           ...obj,
           timestamp: newtime,
@@ -100,7 +101,7 @@ function App() {
         }
       );
     } else {
-      db.child(`ideas/${ideaId}`).set({ ...obj, rating: rating }, (err) => {
+      db.child(`${currentUser}/${ideaId}`).set({ ...obj, rating: rating }, (err) => {
         if (err) {
           console.log(err);
         } else {
@@ -112,7 +113,7 @@ function App() {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure?")) {
-      db.child(`ideas/${id}`).remove((err) => {
+      db.child(`${currentUser}/${id}`).remove((err) => {
         if (err) {
           console.log(err);
         } else {
@@ -128,59 +129,49 @@ function App() {
 
   function handleEditCategory() {
     setOpen(true);
-    setCategory('')
+    setCategory("");
   }
 
   function handleAddCategory() {
-      options.push(category)
-      setOpen(false)
-      setUpdate(false)
+    options.push(category);
+    setOpen(false);
+    setUpdate(false);
   }
 
-  function handleRemoveCategory(string){
-    options.splice(string, 1)
-    setOpen(false)
-    setUpdate(false)
-
+  function handleRemoveCategory(string) {
+    options.splice(string, 1);
+    setOpen(false);
+    setUpdate(false);
   }
 
-  function handleCategoryInput(e){
-    setCategory(e.target.value)
+  function handleCategoryInput(e) {
+    setCategory(e.target.value);
   }
-  
-  function handleEditOneCategory(index){
-    setUpdate(true)
-    setCategory(options[index])
-    options.splice(index, 1)
+
+  function handleEditOneCategory(index) {
+    setUpdate(true);
+    setCategory(options[index]);
+    options.splice(index, 1);
   }
 
   return (
+    <>
+
     <div className="App">
-      <Typography
-        variant="h2"
-        className={classes.title}
-      >
+      <Typography variant="h2" className={classes.title}>
         IDEA SAVER
       </Typography>
-      <Paper
-        className={classes.formPaper}
-      >
-        <form
-          className={classes.form}
-          onSubmit={handleSubmit}
-        >
-          <label className={classes.formLabel}>
-            Title
-          </label>
+    <Login setCurrentUser={setCurrentUser} currentUser={currentUser}/>
+      <Paper className={classes.formPaper}>
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <label className={classes.formLabel}>Title</label>
           <input
             value={values.title}
             name="title"
             onChange={handleInput}
             className={classes.titleInput}
           />
-          <label className={classes.formLabel}>
-            Description
-          </label>
+          <label className={classes.formLabel}>Description</label>
           <TextareaAutosize
             rowsMax={10}
             name="longTitle"
@@ -189,11 +180,7 @@ function App() {
             className={classes.descriptionInput}
           />
 
-          <Typography
-            className={classes.ratingInput}
-          >
-            Rating
-          </Typography>
+          <Typography className={classes.ratingInput}>Rating</Typography>
           <Slider
             defaultValue={rating}
             step={1}
@@ -205,9 +192,7 @@ function App() {
             onChange={handleSlider}
             value={rating}
           />
-          <label className={classes.formLabel}>
-            Category
-          </label>
+          <label className={classes.formLabel}>Category</label>
           <select
             value={values.category}
             name="category"
@@ -220,28 +205,42 @@ function App() {
           </select>
 
           <Modal open={open} onClose={(e) => setOpen(false)}>
-            <Paper
-              className={classes.modal}
-            >
-              {options.map((option, index)=>(
-                <div style={{display:"flex", justifyContent:"space-between"}}  key={index}>
+            <Paper className={classes.modal}>
+              {options.map((option, index) => (
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  key={index}
+                >
                   <Typography>{option}</Typography>
                   <div>
-                <Button onClick={()=>handleEditOneCategory(index)}><EditIcon color='primary'/></Button>
-                <Button onClick={()=>handleRemoveCategory(index)}><DeleteIcon color='secondary'/></Button>
+                    <Button onClick={() => handleEditOneCategory(index)}>
+                      <EditIcon color="primary" />
+                    </Button>
+                    <Button onClick={() => handleRemoveCategory(index)}>
+                      <DeleteIcon color="secondary" />
+                    </Button>
                   </div>
                 </div>
               ))}
-              <input placeholder='add category' value={category} onChange={handleCategoryInput} className={classes.modalInput} />
-              <Button variant="contained" color="primary" onClick={handleAddCategory}>{update ? "Update category" : "add category"}</Button>
+              <input
+                placeholder="add category"
+                value={category}
+                onChange={handleCategoryInput}
+                className={classes.modalInput}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddCategory}
+              >
+                {update ? "Update category" : "add category"}
+              </Button>
             </Paper>
           </Modal>
 
           <Button onClick={handleEditCategory}>edit categories</Button>
 
-          <label className={classes.formLabel}>
-            Expectation
-          </label>
+          <label className={classes.formLabel}>Expectation</label>
           <input
             name="expectation"
             value={values.expectation}
@@ -253,8 +252,15 @@ function App() {
           </Button>
         </form>
       </Paper>
-      <NewIdea ideaObj={ideaObj} setIdeaId={setIdeaId} handleDelete={handleDelete}/>
+      <NewIdea
+        ideaObj={ideaObj}
+        setIdeaId={setIdeaId}
+        handleDelete={handleDelete}
+      />
+      
     </div>
+
+  </>
   );
 }
 
