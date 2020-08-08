@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles((theme) => ({
   title: {
-    color: "#ffff",
+    color: "#07d38a",
     fontWeight: "700",
     padding: "1rem",
     letterSpacing: "10px",

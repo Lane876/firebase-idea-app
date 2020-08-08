@@ -6,13 +6,13 @@ import {
   Paper,
   Typography,
   Slider,
-  Divider,
   TextareaAutosize,
   Modal,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useStyles } from "./styles";
+import NewIdea from "./components/NewIdea";
 
 function App() {
   const initialState = {
@@ -134,7 +134,6 @@ function App() {
       options.push(category)
       setOpen(false)
       setUpdate(false)
-
   }
 
   function handleRemoveCategory(string){
@@ -229,9 +228,7 @@ function App() {
                   <div>
                 <Button onClick={()=>handleEditOneCategory(index)}><EditIcon color='primary'/></Button>
                 <Button onClick={()=>handleRemoveCategory(index)}><DeleteIcon color='secondary'/></Button>
-
                   </div>
-
                 </div>
               ))}
               <input placeholder='add category' value={category} onChange={handleCategoryInput} className={classes.modalInput} />
@@ -255,56 +252,7 @@ function App() {
           </Button>
         </form>
       </Paper>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {Object.keys(ideaObj).map((id, index) => {
-          return (
-            <Paper
-              key={id}
-              style={{ width: "400px", margin: "2rem auto", padding: "1rem" }}
-            >
-              <Typography style={{ display: "flex" , marginBottom:"1rem"}}>{index + 1}.</Typography>
-              <Typography style={{ display: "flex",wordWrap: "break-word" }}>Title: {ideaObj[id].title}</Typography>
-              <Divider />
-              <Typography style={{ wordWrap: "break-word", display: "flex" }}>
-                Description: {ideaObj[id].longTitle}
-              </Typography>
-              <Divider />
-              <Typography style={{ display: "flex" }}>Rating: {ideaObj[id].rating}</Typography>
-              <Divider />
-              <Typography style={{ display: "flex", wordWrap: "break-word" }}>
-                Category: {ideaObj[id].category}
-              </Typography>
-              <Divider />
-              <Typography style={{ display: "flex", wordWrap: "break-word" }}>
-                Expectation: {ideaObj[id].expectation}
-              </Typography>
-              <Divider />
-              <Typography style={{ display: "flex",wordWrap: "break-word" }}>
-                Created at: {ideaObj[id].timestamp}
-              </Typography>
-              <Divider />
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <Button onClick={() => setIdeaId(id)}>
-                  <a href="#" style={{ textDecoration: "none" }}>
-                    <EditIcon color="primary" />
-                  </a>
-                </Button>
-                <Button onClick={() => handleDelete(id)}>
-                  <DeleteIcon color="secondary" />
-                </Button>
-              </div>
-            </Paper>
-          );
-        })}
-      </div>
+      <NewIdea ideaObj={ideaObj} setIdeaId={setIdeaId} handleDelete={handleDelete}/>
     </div>
   );
 }
