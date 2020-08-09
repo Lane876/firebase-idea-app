@@ -11,7 +11,7 @@ const Login = ({ setCurrentUser, currentUser }) => {
 
   useEffect(() => {
     db.auth().onAuthStateChanged((user) => {
-      if (user) setCurrentUser(user.displayName);
+      if (user) setCurrentUser(user.uid);
     });
   }, []);
   const authWithGoogle = async () => {
